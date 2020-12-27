@@ -5,6 +5,7 @@ vendor/
 
 .env
 composer.lock
+symfony.lock
 
 phpunit.xml.dist
 .phpunit.result.cache
