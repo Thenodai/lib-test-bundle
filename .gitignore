@@ -1,0 +1,10 @@
+.idea/
+bin/
+var/
+vendor/
+
+.env
+composer.lock
+
+phpunit.xml.dist
+.phpunit.result.cache

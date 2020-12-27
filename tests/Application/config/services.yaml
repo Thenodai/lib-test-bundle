@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Thenodai\Bundle\Test\Application\:
+        resource: '../*'
+        exclude: '../{Entity,Kernel.php,config/bundles.php}'
+
+    Thenodai\Bundle\Test\Application\Controller\:
+        resource: '../Controller/*'
+        tags: ['controller.service_arguments']
