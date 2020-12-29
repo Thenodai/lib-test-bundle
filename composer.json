@@ -9,9 +9,13 @@
             "email": "pijus.pauliukonis@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Thenodai\\Bundle\\TestCaseBundle\\": "src"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
-            "Thenodai\\Bundle\\TestCaseBundle\\": "src",
             "Thenodai\\Bundle\\Test\\": "tests"
         }
     },
