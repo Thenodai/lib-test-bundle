@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class FunctionalTestCase extends TestCase
@@ -32,6 +31,15 @@ class FunctionalTestCase extends TestCase
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->updateSchema($metadata);
 
+        if (count($fixtures) > 0) {
+            $this->loadFixtures($fixtures);
+        }
+
+        return new Client($this->kernel);
+    }
+
+    protected function loadFixtures(array $fixtures): void
+    {
         $arrayInput = new ArrayInput([
             'command' => 'doctrine:fixtures:load',
             '--group' => $fixtures,
@@ -42,8 +50,6 @@ class FunctionalTestCase extends TestCase
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
         $application->run($arrayInput);
-
-        return new Client($this->kernel);
     }
 
     protected function setUpContainer(): ContainerInterface
@@ -52,23 +58,23 @@ class FunctionalTestCase extends TestCase
         $this->kernel = new $class($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 
         $this->kernel->boot();
-        $this->container = $this->kernel->getContainer();
+        $this->container = $this->kernel->getContainer()->get('test.service_container');
 
         return $this->container;
     }
 
     protected function getEntityManager(): EntityManagerInterface
     {
-        $container = $this->kernel->getContainer()->get('service_container');
+        if ($this->container === null) {
+            $this->setUpContainer();
+        }
 
-        return $container->get('doctrine')->getManager();
+        return $this->container->get('doctrine.orm.entity_manager');
     }
 
     protected function tearDown(): void
     {
         $this->kernel->shutdown();
-
-        $fs = new Filesystem();
-        $fs->remove($this->kernel->getCacheDir());
+        $this->container = null;
     }
 }
