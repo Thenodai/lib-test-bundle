@@ -12,3 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - downgraded dependencies versions
 - symfony.lock versioned
+
+## [0.1.5]
+### Added
+- used symfony test service container
+- optimised tearDown
